@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Untangle</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div id="unity-container">
+      <canvas id="unity-canvas" tabindex="-1"></canvas>
+    </div>
+    <div id="overlay">
+      <p>Loading <span id="loading-counter">0</span>%...</p>
+
+      <div id="loading-bar">
+        <div id="loading-bar-fill"></div>
+      </div>
+    </div>
+
+    <script src="Build/Build.loader.js"></script>
+    <script>
+      createUnityInstance(
+        document.querySelector("#unity-canvas"),
+        {
+          dataUrl: "Build/Build.data.unityweb",
+          frameworkUrl: "Build/Build.framework.js.unityweb",
+          codeUrl: "Build/Build.wasm.unityweb",
+          streamingAssetsUrl: "StreamingAssets",
+          productVersion: "1.0.1",
+          // matchWebGLToCanvasSize: false, // Uncomment this to separately control WebGL canvas render size and DOM element size.
+          // devicePixelRatio: 1, // Uncomment this to override low DPI rendering on high DPI displays.
+        },
+        (progress) => {
+          const percentage = Math.round(100 * progress);
+          document.querySelector("#loading-bar-fill").style.width =
+            percentage + "%"; // Adjust fill width
+          document.querySelector("#loading-counter").textContent = percentage;
+        }
+      )
+        .then((unityInstance) => {
+          //loadingBar.style.display = "none";
+          var fadeTime = 1700;
+          setTimeout(function() {
+              var overlay = document.getElementById('overlay');
+              overlay.style.transition = 'opacity 2s'; // Fade-out transition
+              overlay.style.opacity = '0';
+
+              setTimeout(function() {
+                overlay.remove();
+              }, fadeTime); 
+      
+            }, fadeTime);
+        
+        })
+        .catch((message) => {
+          alert(message);
+        });
+    </script>
+  </body>
+</html>
